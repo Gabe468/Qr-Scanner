@@ -1,66 +1,29 @@
-// Code  for mongoose config in backend
-// Filename - backend/index.js
- 
-// To connect with your mongoDB database
-const mongoose = require('mongoose');
-mongoose.connect('mongodb://localhost:27017/', {
-    dbName: 'yourDB-name',
-    useNewUrlParser: true,
-    useUnifiedTopology: true
-}, err => err ? console.log(err) : 
-    console.log('Connected to yourDB-name database'));
- 
-// Schema for users of app
-const UserSchema = new mongoose.Schema({
-    name: {
-        type: String,
-        required: true,
-    },
-    email: {
-        type: String,
-        required: true,
-        unique: true,
-    },
-    date: {
-        type: Date,
-        default: Date.now,
-    },
-});
-const User = mongoose.model('users', UserSchema);
-User.createIndexes();
- 
-// For backend and express
-const express = require('express');
-const app = express();
-const cors = require("cors");
-console.log("App listen at port 5000");
-app.use(express.json());
-app.use(cors());
-app.get("/", (req, resp) => {
- 
-    resp.send("App is Working");
-    // You can check backend is working or not by 
-    // entering http://localhost:5000
-     
-    // If you see App is working means
-    // backend working properly
-});
- 
-app.post("/register", async (req, resp) => {
-    try {
-        const user = new User(req.body);
-        let result = await user.save();
-        result = result.toObject();
-        if (result) {
-            delete result.password;
-            resp.send(req.body);
-            console.log(result);
-        } else {
-            console.log("User already register");
-        }
- 
-    } catch (e) {
-        resp.send("Something Went Wrong");
+import { MongoClient } from "mongodb";
+// Replace the uri string with your MongoDB deployment's connection string.
+const uri = "mongodb+srv://1:1@qr.jt21cbw.mongodb.net/";
+// Create a new client and connect to MongoDB
+const client = new MongoClient(uri);
+
+
+async function run() {
+  try {
+    // Connect to the "insertDB" database and access its "haiku" collection
+    const database = client.db("insertDB");
+    const haiku = database.collection("haiku");
+    
+    // Create a document to insert
+    const doc = {
+      title: "Record of a Shriveled Datum",
+      content: "No bytes, no problem. Just insert a document, in MongoDB",
     }
-});
-app.listen(5000);
+    // Insert the defined document into the "haiku" collection
+    const result = await haiku.insertOne(doc);
+    // Print the ID of the inserted document
+    console.log(`A document was inserted with the _id: ${result.insertedId}`);
+  } finally {
+     // Close the MongoDB client connection
+    await client.close();
+  }
+}
+// Run the function and handle any errors
+run().catch(console.dir);

@@ -7,6 +7,7 @@ function CreationPage() {
         Ticket: "",
         Assigned: "",
         User: "",
+        UserId: "",
         Location: "",
         Description: "",
         SN: ""
@@ -27,7 +28,7 @@ function CreationPage() {
 
     let display = false;
   return (
-    <div>
+    <div class="body">
         <form onSubmit={handleSubmit}>
             <label class="text">Enter Ticket Number:
                 <input
@@ -53,6 +54,15 @@ function CreationPage() {
                     type="text"
                     name="User"
                     value={qrData.User}
+                    onChange={handleChange}
+                />
+            </label>
+            <label class="text">Enter user's ID:
+                <input
+                    class="qrinput"
+                    type="text"
+                    name="UserId"
+                    value={qrData.UserId}
                     onChange={handleChange}
                 />
             </label>
