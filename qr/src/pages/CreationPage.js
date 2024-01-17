@@ -1,11 +1,12 @@
 import React from 'react'
 import { useState } from 'react';
-import QRCode from "react-qr-code";
+import Select from 'react-select'
 
 function CreationPage() {
+    const [selectedOption, setSelectedOption] = useState(null);
     const [qrData, setQrData] = useState({
-        Ticket: "",
-        Assigned: "",
+        InvoiceNum: "",
+        Worker: "",
         User: "",
         UserId: "",
         Location: "",
@@ -14,6 +15,12 @@ function CreationPage() {
 
     });
 
+    const options = [
+        { value: 'chocolate', label: 'Chocolate' },
+        { value: 'strawberry', label: 'Strawberry' },
+        { value: 'vanilla', label: 'Vanilla' }
+      ];
+
     const handleChange = (event) => {
         setQrData({
             ...qrData,
@@ -21,88 +28,64 @@ function CreationPage() {
         })
     };
 
+    const optionsHandleChange = (value, action) => {
+        let optionArray = [];
+        for(let i = 0; i < value.length; i++) {
+            let obj = value[i];
+            optionArray.push(obj.value);
+        }
+        setQrData({
+            [action.name]: optionArray
+        })
+    };
+
     const handleSubmit = (event) => {
         event.preventDefault();
         console.log(qrData);
     };
-
-    let display = false;
   return (
-    <div class="body">
+    <div className="body">
         <form onSubmit={handleSubmit}>
-            <label class="text">Enter Ticket Number:
+            <label className="text">Enter invoice number:
                 <input
-                    class="qrinput"
+                    className="qrinput"
                     type="text"
-                    name="Ticket"
-                    value={qrData.Ticket}
+                    name="InvoiceNum"
+                    value={qrData.InvoiceNum}
                     onChange={handleChange}
                 />
             </label>
-            <label class="text">Enter your name:
-                <input
-                    class="qrinput"
+            <label className="text">Select workers name:
+                <Select
+                    isMulti
+                    className="qroption"
                     type="text"
-                    name="Assigned"
-                    value={qrData.Assigned}
-                    onChange={handleChange}
+                    name="Worker"
+                    defaultValue={selectedOption}
+                    onChange={optionsHandleChange}
+                    options={options}
                 />
             </label>
-            <label class="text">Enter user's name:
+            <label className="text">Enter VIN:
                 <input
-                    class="qrinput"
+                    className="qrinput"
                     type="text"
                     name="User"
                     value={qrData.User}
                     onChange={handleChange}
                 />
             </label>
-            <label class="text">Enter user's ID:
+            <label className="text">Enter :
                 <input
-                    class="qrinput"
+                    className="qrinput"
                     type="text"
                     name="UserId"
                     value={qrData.UserId}
                     onChange={handleChange}
                 />
             </label>
-            <label class="text">Enter Location:
-                <input
-                    class="qrinput"
-                    type="text"
-                    name="Location"
-                    value={qrData.Location}
-                    onChange={handleChange}
-                />
-            </label>
-            <label class="text">Enter Description:
-                <input
-                    class="qrinput"
-                    type="text"
-                    name="Description"
-                    value={qrData.Description}
-                    onChange={handleChange}
-                />
-            </label>
-            <label class="text">Enter Serial Number:
-                <input
-                    class="qrinput"
-                    type="text"
-                    name="SN"
-                    value={qrData.SN}
-                    onChange={handleChange}
-                />
-            </label>
-            <input class="button-22" type="submit" />
+            <input className="button-22" type="submit" />
         </form>
-        {display &&
-        <div style={{ height: "auto", margin: "0 auto", maxWidth: 256, width: "100%" }}>
-            <QRCode
-            size={512}
-            style={{ height: "auto", maxWidth: "100%", width: "100%", background: 'white', padding: '16px' }}
-            viewBox={`0 0 256 256`}
-            />
-        </div>}
     </div>
   )
 }

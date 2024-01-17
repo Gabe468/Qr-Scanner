@@ -10,7 +10,6 @@ const App = () => {
   return (
     <Router>
       <div class="App">
-        <img src={NJTransitlogo} alt="Logo" />
           <Routes>
             <Route path ="/" element={<QrListPage/>}/>
             <Route path ="/create" element={<CreationPage/>}/>
